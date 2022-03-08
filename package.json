@@ -1,0 +1,27 @@
+{
+  "name": "meets-nft",
+  "version": "1.0.0",
+  "description": "# Truffle Development Environment for Windows and MacOS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Atechy/meets-nft.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Atechy/meets-nft/issues"
+  },
+  "homepage": "https://github.com/Atechy/meets-nft#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
+    "@truffle/hdwallet-provider": "^2.0.3",
+    "dotenv": "^16.0.0",
+    "truffle": "^5.5.3",
+    "truffle-plugin-verify": "^0.5.21"
+  }
+}
