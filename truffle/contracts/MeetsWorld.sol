@@ -51,7 +51,6 @@ contract MeetsWorld is Ownable, ERC721 {
 
     address payable marketingB; // 4%
 
-    // address[] public whitelist;
     mapping(address => bool) public whitelist;
 
     string private _baseURIextended;
@@ -60,11 +59,6 @@ contract MeetsWorld is Ownable, ERC721 {
     uint256 whitelistPrice = 0.2 ether;
 
     mapping(address => uint256) public partnerBalances;
-
-    // uint256 primaryOwnerBalance = 0 ether;
-    // uint256 builderBalance = 0 ether;
-    // uint256 marketingABalance = 0 ether;
-    // uint256 marketingBBalance = 0 ether;
 
     bool private revealed = false;
 
@@ -95,7 +89,7 @@ contract MeetsWorld is Ownable, ERC721 {
     {
         //this is for dev it will change for prod
         require(totalSupply > _tokenIds.current(), "Minting Finished");
-        if (whitelist[msg.sender] == true) {
+        if (whitelist[msg.sender] == true && balanceOf(msg.sender)<5) {
             require(msg.value == whitelistPrice, "Incorrect Amount.");
         } else {
             require(msg.value == listingPrice, "Incorrect Amount.");
@@ -134,25 +128,10 @@ contract MeetsWorld is Ownable, ERC721 {
         require(partnerBalances[_partner] > 0,"Nothing to withdraw");
         _;
     }
-
-    function primaryOwnerPayout() public checksBeforeWithdraw(primaryOwner) {
-        payable(primaryOwner).transfer(partnerBalances[primaryOwner]);
-        partnerBalances[primaryOwner] = 0;
-    }
-
-    function builderPayout() public checksBeforeWithdraw(builder) {
-        payable(builder).transfer(partnerBalances[builder]);
-        partnerBalances[builder] = 0;
-    }
-
-    function marketingAPayout() public checksBeforeWithdraw(marketingA) {
-        payable(marketingA).transfer(partnerBalances[marketingA]);
-        partnerBalances[marketingA] = 0;
-    }
-
-    function marketingBPayout() public checksBeforeWithdraw(marketingB){
-        payable(marketingB).transfer(partnerBalances[marketingB]);
-        partnerBalances[marketingB] = 0;
+    
+    function requestPayout() public checksBeforeWithdraw(msg.sender) {
+        payable(msg.sender).transfer(partnerBalances[msg.sender]);
+        partnerBalances[msg.sender] = 0;
     }
 
     function tokenURI(uint256 tokenId)
