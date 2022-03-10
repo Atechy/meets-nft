@@ -43,8 +43,6 @@ contract MeetsWorld is Ownable, ERC721 {
     // tokenId => uri
     mapping(uint256 => string) private _tokenURIs;
 
-    address payable primaryOwner;
-
     address payable builder; // 10%
 
     address payable marketingA; // 2%
@@ -70,7 +68,6 @@ contract MeetsWorld is Ownable, ERC721 {
         address _marketingA,
         address _marketingB
     ) public ERC721("Meetsmeta", "MM") {
-        primaryOwner = payable(msg.sender);
         builder = payable(_builder);
         marketingA = payable(_marketingA);
         marketingB = payable(_marketingB);
@@ -104,12 +101,12 @@ contract MeetsWorld is Ownable, ERC721 {
         uint256 newItemId = _tokenIds.current();
 
         if (whitelist[msg.sender] == true) {
-            partnerBalances[primaryOwner] = partnerBalances[primaryOwner].add(0.168 ether);// 84%
+            partnerBalances[owner()] = partnerBalances[owner()].add(0.168 ether);// 84%
             partnerBalances[builder] = partnerBalances[builder].add(0.02 ether);// 10%
             partnerBalances[marketingA] = partnerBalances[marketingA].add(0.004 ether);// 2%
             partnerBalances[marketingB] = partnerBalances[marketingB].add(0.008 ether);// 4%
         } else {
-            partnerBalances[primaryOwner] = partnerBalances[primaryOwner].add(0.252 ether);// 84%
+            partnerBalances[owner()] = partnerBalances[owner()].add(0.252 ether);// 84%
             partnerBalances[builder] = partnerBalances[builder].add(0.03 ether);// 10%
             partnerBalances[marketingA] = partnerBalances[marketingA].add(0.006 ether);// 2%
             partnerBalances[marketingB] = partnerBalances[marketingB].add(0.012 ether);// 4%
@@ -176,9 +173,9 @@ contract MeetsWorld is Ownable, ERC721 {
 
     function swipOut() public onlyOwner {
         // transfer to all accounts the balances and the reset to the owner
-        if(partnerBalances[primaryOwner]>0){
-            payable(primaryOwner).transfer(partnerBalances[primaryOwner]);
-            partnerBalances[primaryOwner] = 0;
+        if(partnerBalances[owner()]>0){
+            payable(owner()).transfer(partnerBalances[owner()]);
+            partnerBalances[owner()] = 0;
         }
         if(partnerBalances[builder]>0){
             payable(builder).transfer(partnerBalances[builder]);
