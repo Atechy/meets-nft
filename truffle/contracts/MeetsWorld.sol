@@ -4,9 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract MeetsWorld is Ownable, ERC721 {
     using Counters for Counters.Counter;
+    using SafeMath for uint256;
 
     Counters.Counter private _tokenIds;
 
@@ -41,25 +43,20 @@ contract MeetsWorld is Ownable, ERC721 {
     // tokenId => uri
     mapping(uint256 => string) private _tokenURIs;
 
-    address payable primaryOwner;
-
     address payable builder; // 10%
 
     address payable marketingA; // 2%
 
     address payable marketingB; // 4%
 
-    address[] public whitelist;
+    mapping(address => bool) public whitelist;
 
     string private _baseURIextended;
 
     uint256 listingPrice = 0.3 ether;
     uint256 whitelistPrice = 0.2 ether;
 
-    uint256 primaryOwnerBalance = 0 ether;
-    uint256 builderBalance = 0 ether;
-    uint256 marketingABalance = 0 ether;
-    uint256 marketingBBalance = 0 ether;
+    mapping(address => uint256) public partnerBalances;
 
     bool private revealed = false;
 
@@ -71,10 +68,13 @@ contract MeetsWorld is Ownable, ERC721 {
         address _marketingA,
         address _marketingB
     ) public ERC721("Meetsmeta", "MM") {
-        primaryOwner = payable(msg.sender);
         builder = payable(_builder);
         marketingA = payable(_marketingA);
         marketingB = payable(_marketingB);
+        partnerBalances[msg.sender] = 0 ether;
+        partnerBalances[_builder] = 0 ether;
+        partnerBalances[_marketingA] = 0 ether;
+        partnerBalances[_marketingB] = 0 ether;  
     }
 
     // PUBLIC
@@ -86,7 +86,7 @@ contract MeetsWorld is Ownable, ERC721 {
     {
         //this is for dev it will change for prod
         require(totalSupply > _tokenIds.current(), "Minting Finished");
-        if (whitelist[msg.sender] == true) {
+        if (whitelist[msg.sender] == true && balanceOf(msg.sender)<5) {
             require(msg.value == whitelistPrice, "Incorrect Amount.");
         } else {
             require(msg.value == listingPrice, "Incorrect Amount.");
@@ -101,15 +101,15 @@ contract MeetsWorld is Ownable, ERC721 {
         uint256 newItemId = _tokenIds.current();
 
         if (whitelist[msg.sender] == true) {
-            primaryOwnerBalance += 0.168 ether; // 84%
-            builderBalance += 0.02 ether; // 10%
-            marketingABalance += 0.004 ether; // 2%
-            marketingBBalance += 0.008 ether; // 4%
+            partnerBalances[owner()] = partnerBalances[owner()].add(0.168 ether);// 84%
+            partnerBalances[builder] = partnerBalances[builder].add(0.02 ether);// 10%
+            partnerBalances[marketingA] = partnerBalances[marketingA].add(0.004 ether);// 2%
+            partnerBalances[marketingB] = partnerBalances[marketingB].add(0.008 ether);// 4%
         } else {
-            primaryOwnerBalance += 0.252 ether; // 84%
-            builderBalance += 0.03 ether; // 10%
-            marketingABalance += 0.006 ether; // 2%
-            marketingBBalance += 0.012 ether; // 4%
+            partnerBalances[owner()] = partnerBalances[owner()].add(0.252 ether);// 84%
+            partnerBalances[builder] = partnerBalances[builder].add(0.03 ether);// 10%
+            partnerBalances[marketingA] = partnerBalances[marketingA].add(0.006 ether);// 2%
+            partnerBalances[marketingB] = partnerBalances[marketingB].add(0.012 ether);// 4%
         }
 
         _safeMint(msg.sender, newItemId);
@@ -119,11 +119,16 @@ contract MeetsWorld is Ownable, ERC721 {
         );
         return newItemId;
     }
-
-    function builderPayout() public {
-        require(msg.sender == builder, "Only the builder can payout");
-        payable(builder).transfer(builderBalance);
-        builderBalance = 0;
+  
+    modifier checksBeforeWithdraw(address _partner){
+        require(msg.sender == _partner, "Only the builder can payout");
+        require(partnerBalances[_partner] > 0,"Nothing to withdraw");
+        _;
+    }
+    
+    function requestPayout() public checksBeforeWithdraw(msg.sender) {
+        payable(msg.sender).transfer(partnerBalances[msg.sender]);
+        partnerBalances[msg.sender] = 0;
     }
 
     function tokenURI(uint256 tokenId)
@@ -148,7 +153,7 @@ contract MeetsWorld is Ownable, ERC721 {
             // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
             return string(abi.encodePacked(base, tokenId.toString()));
         } else {
-            return preprerevealUrl;
+            return prerevealUrl;
         }
     }
 
@@ -159,7 +164,7 @@ contract MeetsWorld is Ownable, ERC721 {
     }
 
     function whitelistAddress(address addr) public onlyOwner {
-        whitelist.push(addr);
+        whitelist[addr] = true;
     }
 
     function revealCollection(bool _res) public onlyOwner {
@@ -168,9 +173,23 @@ contract MeetsWorld is Ownable, ERC721 {
 
     function swipOut() public onlyOwner {
         // transfer to all accounts the balances and the reset to the owner
-        // payable(primaryOwner).transfer(address(this).balance);
-        uint256 balance = address(this).balance;
-        payable(primaryOwner).transfer(balance);
+        if(partnerBalances[owner()]>0){
+            payable(owner()).transfer(partnerBalances[owner()]);
+            partnerBalances[owner()] = 0;
+        }
+        if(partnerBalances[builder]>0){
+            payable(builder).transfer(partnerBalances[builder]);
+            partnerBalances[builder] = 0;
+        }
+        if(partnerBalances[marketingA]>0){
+           payable(marketingA).transfer(partnerBalances[marketingA]);
+           partnerBalances[marketingA] = 0;
+        }
+        if(partnerBalances[marketingB]>0){
+           payable(marketingB).transfer(partnerBalances[marketingB]);
+           partnerBalances[marketingB] = 0;
+        }
+        
     }
 
     // INTERNAL
@@ -261,7 +280,7 @@ contract MeetsWorld is Ownable, ERC721 {
         return
             uint256(
                 keccak256(abi.encodePacked(block.timestamp, block.difficulty))
-            ) % 5;
+            ).mod(5);
     }
 
 
