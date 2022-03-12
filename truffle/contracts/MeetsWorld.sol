@@ -74,7 +74,7 @@ contract MeetsWorld is Ownable, ERC721 {
         partnerBalances[msg.sender] = 0 ether;
         partnerBalances[_builder] = 0 ether;
         partnerBalances[_marketingA] = 0 ether;
-        partnerBalances[_marketingB] = 0 ether;  
+        partnerBalances[_marketingB] = 0 ether;
     }
 
     // PUBLIC
@@ -119,13 +119,13 @@ contract MeetsWorld is Ownable, ERC721 {
         );
         return newItemId;
     }
-  
+
     modifier checksBeforeWithdraw(address _partner){
-        require(msg.sender == _partner, "Only the builder can payout");
+        require(msg.sender == _partner, "Only partners can request payout");
         require(partnerBalances[_partner] > 0,"Nothing to withdraw");
         _;
     }
-    
+
     function requestPayout() public checksBeforeWithdraw(msg.sender) {
         payable(msg.sender).transfer(partnerBalances[msg.sender]);
         partnerBalances[msg.sender] = 0;
@@ -189,7 +189,7 @@ contract MeetsWorld is Ownable, ERC721 {
            payable(marketingB).transfer(partnerBalances[marketingB]);
            partnerBalances[marketingB] = 0;
         }
-        
+
     }
 
     // INTERNAL
