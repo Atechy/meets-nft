@@ -86,7 +86,7 @@ contract MeetsWorld is Ownable, ERC721 {
     {
         //this is for dev it will change for prod
         require(totalSupply > _tokenIds.current(), "Minting Finished");
-        if (whitelist[msg.sender] == true && balanceOf(msg.sender)<5) {
+        if (whitelist[msg.sender] == true && balanceOf(msg.sender) < 5) {
             require(msg.value == whitelistPrice, "Incorrect Amount.");
         } else {
             require(msg.value == listingPrice, "Incorrect Amount.");
@@ -163,8 +163,10 @@ contract MeetsWorld is Ownable, ERC721 {
         _baseURIextended = baseURI_;
     }
 
-    function whitelistAddress(address addr) public onlyOwner {
-        whitelist[addr] = true;
+    function whitelistAddress(address[] addrs) public onlyOwner {
+        for (uint i = 0; i < addrs.length; i++) {
+            whitelist[addrs[i]] = true;
+        }
     }
 
     function revealCollection(bool _res) public onlyOwner {
@@ -173,19 +175,19 @@ contract MeetsWorld is Ownable, ERC721 {
 
     function swipOut() public onlyOwner {
         // transfer to all accounts the balances and the reset to the owner
-        if(partnerBalances[owner()]>0){
+        if(partnerBalances[owner()] > 0){
             payable(owner()).transfer(partnerBalances[owner()]);
             partnerBalances[owner()] = 0;
         }
-        if(partnerBalances[builder]>0){
+        if(partnerBalances[builder] > 0){
             payable(builder).transfer(partnerBalances[builder]);
             partnerBalances[builder] = 0;
         }
-        if(partnerBalances[marketingA]>0){
+        if(partnerBalances[marketingA] > 0){
            payable(marketingA).transfer(partnerBalances[marketingA]);
            partnerBalances[marketingA] = 0;
         }
-        if(partnerBalances[marketingB]>0){
+        if(partnerBalances[marketingB] > 0){
            payable(marketingB).transfer(partnerBalances[marketingB]);
            partnerBalances[marketingB] = 0;
         }
