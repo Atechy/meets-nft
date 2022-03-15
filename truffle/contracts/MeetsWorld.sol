@@ -163,7 +163,7 @@ contract MeetsWorld is Ownable, ERC721 {
         _baseURIextended = baseURI_;
     }
 
-    function whitelistAddress(address[] addrs) public onlyOwner {
+    function whitelistAddress(address[] calldata addrs) public onlyOwner {
         for (uint i = 0; i < addrs.length; i++) {
             whitelist[addrs[i]] = true;
         }
