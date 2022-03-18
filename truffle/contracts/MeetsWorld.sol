@@ -121,7 +121,6 @@ contract MeetsWorld is Ownable, ERC721 {
     }
 
     modifier checksBeforeWithdraw(address _partner){
-        require(msg.sender == _partner, "Only partners can request payout");
         require(partnerBalances[_partner] > 0,"Nothing to withdraw");
         _;
     }

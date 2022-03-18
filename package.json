@@ -21,6 +21,7 @@
     "@openzeppelin/contracts": "^4.5.0",
     "@truffle/hdwallet-provider": "^2.0.3",
     "axios": "^0.26.0",
+    "chalk": "^4.1.2",
     "config": "^3.3.7",
     "dotenv": "^16.0.0",
     "truffle": "^5.5.3",
