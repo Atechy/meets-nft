@@ -1,5 +1,7 @@
-var MeetsWorld = artifacts.require('./MeetsWorld');
-require('dotenv').config();
+const MeetsWorld = artifacts.require('./MeetsWorld');
+const path = require('path');
+const filePath = path.join(__dirname, '../../.env');
+require('dotenv').config({path:filePath});
 
 module.exports = async function (deployer) {
 
