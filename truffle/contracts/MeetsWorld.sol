@@ -32,6 +32,9 @@ contract MeetsWorld is Ownable, ERC721 {
 
     using Strings for uint256;
 
+    bool public whitelistMintingStart=false;
+    bool public normalMintngStart=false;
+
     struct assignedCategory {
         address addr; // address of the owner
         uint256 tokenId;
@@ -86,9 +89,10 @@ contract MeetsWorld is Ownable, ERC721 {
     {
         //this is for dev it will change for prod
         require(totalSupply > _tokenIds.current(), "Minting Finished");
-        if (whitelist[msg.sender] == true && balanceOf(msg.sender) < 5) {
+        if (whitelist[msg.sender] == true && balanceOf(msg.sender) < 5 && whitelistMintingStart) {
             require(msg.value == whitelistPrice, "Incorrect Amount.");
         } else {
+            require(normalMintngStart,"Minting Stoped.");
             require(msg.value == listingPrice, "Incorrect Amount.");
         }
 
@@ -157,6 +161,14 @@ contract MeetsWorld is Ownable, ERC721 {
     }
 
     // PUBLIC ONLY OWNER
+
+    function setWhitelistMinting(bool _whitelistMintingStart) external onlyOwner{
+         whitelistMintingStart=_whitelistMintingStart;
+    }
+
+    function setNormalMintng(bool _normalMintngStart) external onlyOwner{
+        normalMintngStart=_normalMintngStart;
+    }
 
     function setBaseURI(string memory baseURI_) external onlyOwner {
         _baseURIextended = baseURI_;

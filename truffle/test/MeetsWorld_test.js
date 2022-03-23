@@ -38,7 +38,7 @@ contract('MeetsWorld', (accounts) => {
         log(`
         ${chalk.yellow.bold('BOB')}(${chalk.green(bob)}) Mint a NFT.
                     `);
-
+        await mintingStart(true)
         await mint(bob, false)
         await details(0)
 
@@ -66,6 +66,7 @@ contract('MeetsWorld', (accounts) => {
         log(`
         --------------------------------------------------------------------------
         `);
+        await mintingStart(true)
         await mint(bob, true)
         await details(0)
         log(`
@@ -119,6 +120,7 @@ contract('MeetsWorld', (accounts) => {
 
         Minting 1 NFT..
       `)
+        await mintingStart(true)
         await mint(Usman, true)
         await MeetsWorldContract.revealCollection(true)
         await MeetsWorldContract.setBaseURI("https://meetsWorld.com/assets/")
@@ -132,6 +134,11 @@ contract('MeetsWorld', (accounts) => {
 
     //Functions
 
+    async function mintingStart(_bool){
+        await MeetsWorldContract.setWhitelistMinting(_bool)
+        await MeetsWorldContract.setNormalMintng(_bool)
+    }
+
     async function mintSomeNFT() {
 
         log(chalk.blue.bold(`
@@ -141,7 +148,7 @@ contract('MeetsWorld', (accounts) => {
         Minting NFT's by ${chalk.yellow.bold('BOB')}(${chalk.green(bob)}),
         ${chalk.yellow.bold('USMAN')}(${chalk.green(Usman)}) at Normal Rate.
         `)
-
+        await mintingStart(true)
         await mint(bob, false)
         await mint(Usman, false)
 
