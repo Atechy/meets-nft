@@ -22,13 +22,13 @@ contract MeetsWorld is Ownable, ERC721 {
 
     Counters.Counter private Exclusive;
 
-    uint256 public BasicSupply = 6000;
-    uint256 public NormalSupply = 2000;
-    uint256 public RareSupply = 1500;
-    uint256 public EpicSupply = 400;
-    uint256 public ExclusiveSupply = 100;
+    uint256 public BasicSupply = 1955;
+    uint256 public NormalSupply = 1222;
+    uint256 public RareSupply = 977;
+    uint256 public EpicSupply = 488;
+    uint256 public ExclusiveSupply = 246;
 
-    uint256 public totalSupply = 10000;
+    uint256 public totalSupply = 4888;
 
     using Strings for uint256;
 
@@ -56,8 +56,8 @@ contract MeetsWorld is Ownable, ERC721 {
 
     string private _baseURIextended;
 
-    uint256 listingPrice = 0.3 ether;
-    uint256 whitelistPrice = 0.2 ether;
+    uint256 listingPrice = 0.16 ether;
+    uint256 whitelistPrice = 0.11 ether;
 
     mapping(address => uint256) public partnerBalances;
 
@@ -105,15 +105,15 @@ contract MeetsWorld is Ownable, ERC721 {
         uint256 newItemId = _tokenIds.current();
 
         if (whitelist[msg.sender] == true) {
-            partnerBalances[owner()] = partnerBalances[owner()].add(0.168 ether);// 84%
-            partnerBalances[builder] = partnerBalances[builder].add(0.02 ether);// 10%
-            partnerBalances[marketingA] = partnerBalances[marketingA].add(0.004 ether);// 2%
-            partnerBalances[marketingB] = partnerBalances[marketingB].add(0.008 ether);// 4%
+            partnerBalances[owner()] = partnerBalances[owner()].add(0.0924 ether);// 84%
+            partnerBalances[builder] = partnerBalances[builder].add(0.011 ether);// 10%
+            partnerBalances[marketingA] = partnerBalances[marketingA].add(0.0022 ether);// 2%
+            partnerBalances[marketingB] = partnerBalances[marketingB].add(0.0044 ether);// 4%
         } else {
-            partnerBalances[owner()] = partnerBalances[owner()].add(0.252 ether);// 84%
-            partnerBalances[builder] = partnerBalances[builder].add(0.03 ether);// 10%
-            partnerBalances[marketingA] = partnerBalances[marketingA].add(0.006 ether);// 2%
-            partnerBalances[marketingB] = partnerBalances[marketingB].add(0.012 ether);// 4%
+            partnerBalances[owner()] = partnerBalances[owner()].add(0.1344 ether);// 84%
+            partnerBalances[builder] = partnerBalances[builder].add(0.016 ether);// 10%
+            partnerBalances[marketingA] = partnerBalances[marketingA].add(0.0032 ether);// 2%
+            partnerBalances[marketingB] = partnerBalances[marketingB].add(0.0064  ether);// 4%
         }
 
         _safeMint(msg.sender, newItemId);
@@ -210,43 +210,24 @@ contract MeetsWorld is Ownable, ERC721 {
     function assignCategory(uint256 _rad) internal returns (uint256) {
         uint256 res;
 
-        if (_rad == 0 && Basic.current() < BasicSupply) {
+        if ((_rad >= 1 && _rad < 1956) && Basic.current() < BasicSupply) {
             Basic.increment();
             return 0;
-        } else {
-            res = otherOption();
-            return res;
-        }
-        if (_rad == 1 && Normal.current() < NormalSupply) {
+        } else if((_rad >= 2444 && _rad < 3666) && Normal.current() < NormalSupply){
             Normal.increment();
             return 1;
-        } else {
-            res = otherOption();
-            return res;
-        }
-
-        if (_rad == 2 && Rare.current() < RareSupply) {
-            Rare.increment();
-            return 2;
-        } else {
-            res = otherOption();
-            return res;
-        }
-
-        if (_rad == 3 && Epic.current() < EpicSupply) {
-            Epic.increment();
+        }else if((_rad >= 3912 && _rad < 4889) && Rare.current() < RareSupply) {
+             Rare.increment();
+             return 2;
+        }else if((_rad >= 1956 && _rad < 2444) && Epic.current() < EpicSupply){
+              Epic.increment();
             return 3;
-        } else {
-            res = otherOption();
-            return res;
-        }
-
-        if (_rad == 4 && Exclusive.current() < ExclusiveSupply) {
-            Exclusive.increment();
-            return 4;
-        } else {
-            res = otherOption();
-            return res;
+        }else if((_rad >= 3666 && _rad < 3912) && Exclusive.current() < ExclusiveSupply) {
+             Exclusive.increment();
+             return 4;
+        }else{
+             res = otherOption();
+             return res;
         }
 
         return 5;
@@ -289,11 +270,11 @@ contract MeetsWorld is Ownable, ERC721 {
         return _baseURIextended;
     }
 
-    function random() internal view returns (uint256) {
+    function random() public view returns (uint256) {
         return
             uint256(
                 keccak256(abi.encodePacked(block.timestamp, block.difficulty))
-            ).mod(5);
+            ).mod(4888);
     }
 
 
