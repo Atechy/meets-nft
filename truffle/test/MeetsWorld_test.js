@@ -28,7 +28,7 @@ contract('MeetsWorld', (accounts) => {
         );
     });
 
-    it('Mint passes at normal price---', async () => {
+    xit('Mint passes at normal price---', async () => {
         log(`
                              Minting Start...
                     `);
@@ -38,7 +38,8 @@ contract('MeetsWorld', (accounts) => {
         log(`
         ${chalk.yellow.bold('BOB')}(${chalk.green(bob)}) Mint a NFT.
                     `);
-        await mintingStart(true)
+
+        await setMintingStart(true)            
         await mint(bob, false)
         await details(0)
 
@@ -66,7 +67,7 @@ contract('MeetsWorld', (accounts) => {
         log(`
         --------------------------------------------------------------------------
         `);
-        await mintingStart(true)
+        await setMintingStart(false)
         await mint(bob, true)
         await details(0)
         log(`
@@ -120,7 +121,7 @@ contract('MeetsWorld', (accounts) => {
 
         Minting 1 NFT..
       `)
-        await mintingStart(true)
+        await setMintingStart(false)
         await mint(Usman, true)
         await MeetsWorldContract.revealCollection(true)
         await MeetsWorldContract.setBaseURI("https://meetsWorld.com/assets/")
@@ -134,11 +135,6 @@ contract('MeetsWorld', (accounts) => {
 
     //Functions
 
-    async function mintingStart(_bool){
-        await MeetsWorldContract.setWhitelistMinting(_bool)
-        await MeetsWorldContract.setNormalMintng(_bool)
-    }
-
     async function mintSomeNFT() {
 
         log(chalk.blue.bold(`
@@ -148,7 +144,7 @@ contract('MeetsWorld', (accounts) => {
         Minting NFT's by ${chalk.yellow.bold('BOB')}(${chalk.green(bob)}),
         ${chalk.yellow.bold('USMAN')}(${chalk.green(Usman)}) at Normal Rate.
         `)
-        await mintingStart(true)
+        await setMintingStart(true)
         await mint(bob, false)
         await mint(Usman, false)
 
@@ -159,7 +155,7 @@ contract('MeetsWorld', (accounts) => {
         log(`
         Adding ${chalk.yellow.bold('IMAAD')}(${chalk.green(Imaad)}) in Whitelisted list...
         `)
-
+        await setMintingStart(false)
         await mint(Imaad, true)
     }
 
@@ -219,6 +215,20 @@ contract('MeetsWorld', (accounts) => {
         log(`
         ${chalk.yellow.bold(partnerName)} Balance ${payOutType} payout: ${chalk.green(await web3.eth.getBalance(partnerAddress)/1e18)} ether.
         `)
+    }
+
+    async function setMintingStart(_parm){
+     
+        if(_parm){
+            await MeetsWorldContract.setNormalMintng(true,{
+                from: OWNER
+            })
+        }else{
+            await MeetsWorldContract.setWhitelistMinting(true,{
+                from: OWNER
+            })
+        }
+       
     }
 
 });
