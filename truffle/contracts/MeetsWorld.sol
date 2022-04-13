@@ -274,7 +274,7 @@ contract MeetsWorld is Ownable, ERC721 {
         return
             uint256(
                 keccak256(abi.encodePacked(block.timestamp, block.difficulty))
-            ).mod(4888);
+            ).mod(4889);
     }
 
 
