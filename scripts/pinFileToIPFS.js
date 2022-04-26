@@ -1,9 +1,13 @@
-require('dotenv').config();
+
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
 const { storeDataToFile } = require('./ipfsHelper.js');
+const path = require('path');
+const envFilePath = path.join(__dirname, '../.env');
+require('dotenv').config({path:envFilePath});
 
+console.log(process.env.PINATA_ENDPOINT,"process.env.PINATA_ENDPOINT")
 // Calls Pinata API's to pin file to IPFS
 const pinFileToIPFS = async (filePath) => {
   const pinataEndpoint = process.env.PINATA_ENDPOINT;
