@@ -17,16 +17,10 @@ contract MeetsWorld is Ownable, ERC721 , ReentrancyGuard , VerifySignature {
     Counters.Counter private _tokenIds;
 
     uint256 public totalSupply = 4888;
-    uint256 public maxMintingLimit = 5;
+    uint256 public maxMintingLimit = 3;
 
     bool public whitelistMintingStart=false;
     bool public normalMintngStart=false;
-
-    struct assignedCategory {
-        address addr; // address of the owner
-        uint256 tokenId;
-        uint256 rarityLevel; // 0 = Basic, 1 = Normal, 2 = Rare, 3 = Epic ,4=Exclusive
-    }
 
     struct MintPayload {
         address to;
@@ -34,8 +28,6 @@ contract MeetsWorld is Ownable, ERC721 , ReentrancyGuard , VerifySignature {
     }
 
     address private verificationAdmin;
-
-    assignedCategory[] public assignedCategories;
 
     address payable builder; // 10%
 
@@ -79,7 +71,6 @@ contract MeetsWorld is Ownable, ERC721 , ReentrancyGuard , VerifySignature {
     {
 
         require(totalSupply > _tokenIds.current(), "Minting Finished");
-        require(msg.value == listingPrice, "Incorrect Amount.");
         if (whitelist[msg.sender] == true && balanceOf(msg.sender) < maxMintingLimit && whitelistMintingStart) {
             require(msg.value == whitelistPrice, "Incorrect Amount.");
         } else {
