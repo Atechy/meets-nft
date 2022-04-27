@@ -126,7 +126,7 @@ contract MeetsWorld is Ownable, ERC721 , ReentrancyGuard , VerifySignature {
         _safeMint(msg.sender, newItemId);
         return newItemId;
     }
-    
+
     modifier checksBeforeWithdraw(address _partner){
         require(partnerBalances[_partner] > 0,"Nothing to withdraw");
         _;
@@ -136,11 +136,9 @@ contract MeetsWorld is Ownable, ERC721 , ReentrancyGuard , VerifySignature {
         payable(msg.sender).transfer(partnerBalances[msg.sender]);
         partnerBalances[msg.sender] = 0;
     }
-    
+
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-        
-            return string(abi.encodePacked(ipfsGateway,ipfsHash,'/',tokenId.toString(),'.json'));
-        
+        return string(abi.encodePacked(ipfsGateway,ipfsHash,'/',tokenId.toString(),'.json'));
     }
 
     // PUBLIC ONLY OWNER
@@ -194,14 +192,12 @@ contract MeetsWorld is Ownable, ERC721 , ReentrancyGuard , VerifySignature {
         if(address(this).balance > 0){
             payable(owner()).transfer(address(this).balance);
         }
-
-
     }
 
     // INTERNAL
 
     function verifyOwnerSignature(MintPayload calldata _payload, bytes memory _signature) public view returns(bool) {
-        
+
           bytes32 ethSignedHash = getEthSignedMessageHash(getMessageHash(_payload.nonce.toString(),_payload.to));
           return recoverSigner(ethSignedHash,_signature) == verificationAdmin;
 
