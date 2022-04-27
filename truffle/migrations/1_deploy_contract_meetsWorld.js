@@ -9,7 +9,8 @@ module.exports = async function (deployer) {
     MeetsWorld,
     process.env.BUILDER,
     process.env.MARKETINGA,
-    process.env.MARKETINGB
+    process.env.MARKETINGB,
+    process.env.VerificationAdmin
     );
   await MeetsWorld.deployed();
 };
