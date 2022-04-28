@@ -10,10 +10,8 @@ import "./Verify.sol";
 
 contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
 
-    using Counters
-    for Counters.Counter;
-    using Strings
-    for uint256;
+    using Countersn for Counters.Counter;
+    using Strings for uint256;
 
     Counters.Counter private _tokenIds;
 
