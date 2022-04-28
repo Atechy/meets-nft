@@ -107,7 +107,9 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
         require(totalSupply > _tokenIds.current(), "Minting Finished");
         require(msg.value == whitelistPrice * _payload._toMint, "Incorrect Amount.");
         require(verifyOwnerSignature(_payload, _signature), "Invalid Signature");
-
+        require((whitelistMinted[msg.sender] + _payload._toMint) <= maxWhitelistminting, "Whitelist minting limit reached for this address.");
+        
+        whitelistMinted[msg.sender] += _payload._toMint;
         distributeEth(true, _payload._toMint);
         mintMultiple(_payload._toMint);
     }
