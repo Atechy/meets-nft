@@ -10,7 +10,7 @@ import "./Verify.sol";
 
 contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
 
-    using Countersn for Counters.Counter;
+    using Counters for Counters.Counter;
     using Strings for uint256;
 
     Counters.Counter private _tokenIds;
@@ -31,11 +31,11 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
 
     address private verificationAdmin;
 
-    address payable builder; // 10%
+    address private builder; // 10%
 
-    address payable marketingA; // 2%
+    address private marketingA; // 2%
 
-    address payable marketingB; // 4%
+    address private marketingB; // 4%
 
     mapping(address => bool) public whitelist;
 
@@ -56,9 +56,9 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
         address _marketingB,
         address _verificationAdmin
     ) public ERC721("Meetsmeta", "MM") {
-        builder = payable(_builder);
-        marketingA = payable(_marketingA);
-        marketingB = payable(_marketingB);
+        builder = _builder;
+        marketingA = _marketingA;
+        marketingB = _marketingB;
         partnerBalances[msg.sender] = 0 ether;
         partnerBalances[_builder] = 0 ether;
         partnerBalances[_marketingA] = 0 ether;
@@ -71,7 +71,7 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
     function mintPassesWhitelist(uint8 _toMint)
     public
     payable
-    nonReentrant() {
+    nonReentrant {
         require(_toMint <= mutipleMintingLimit, "Only 3 NFT's mint at a time.");
         require(whitelistMintingStart, "Whitelist not started yet.");
         require(whitelist[msg.sender], "Address is not whitelisted.");
@@ -87,7 +87,7 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
     function mintPassesPublic(uint8 _toMint)
     public
     payable
-    nonReentrant() {
+    nonReentrant {
         require(_toMint <= mutipleMintingLimit, "Only 3 NFT's mint at a time.");
         require(publicMintingStart, "Public minting not started yet.");
         require(totalSupply >= (_tokenIds.current() + _toMint), "Minting Finished");
@@ -103,7 +103,7 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
     function mintPassesVerified(MintPayload calldata _payload, bytes memory _signature)
     public
     payable
-    nonReentrant() {
+    nonReentrant {
         require(totalSupply > _tokenIds.current(), "Minting Finished");
         require(msg.value == whitelistPrice * _payload._toMint, "Incorrect Amount.");
         require(verifyOwnerSignature(_payload, _signature), "Invalid Signature");
