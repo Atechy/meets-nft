@@ -33,12 +33,6 @@ contract MeetsWorld is Ownable,ERC721, ERC721Enumerable, ReentrancyGuard, Verify
 
     address private verificationAdmin;
 
-    address private builder; // 10%
-
-    address private marketingA; // 2%
-
-    address private marketingB; // 4%
-
     mapping(address => bool) public whitelist;
 
     mapping(address => uint256) public whitelistMinted;
@@ -46,8 +40,6 @@ contract MeetsWorld is Ownable,ERC721, ERC721Enumerable, ReentrancyGuard, Verify
 
     uint256 listingPrice = 0.16 ether;
     uint256 whitelistPrice = 0.11 ether;
-
-    mapping(address => uint256) public partnerBalances;
 
     string public ipfsGateway = "https://gateway.pinata.cloud/ipfs/";
     string public ipfsHash = "QmX49QfWRfNwot4c6k6FAP6jNXcn4ssCwjndLjNyToUyZT";
@@ -103,16 +95,6 @@ contract MeetsWorld is Ownable,ERC721, ERC721Enumerable, ReentrancyGuard, Verify
 
         whitelistMinted[msg.sender] += _payload._toMint;
         mintMultiple(_payload._toMint);
-    }
-
-    modifier checksBeforeWithdraw(address _partner) {
-        require(partnerBalances[_partner] > 0, "Nothing to withdraw");
-        _;
-    }
-
-    function requestPayout() public checksBeforeWithdraw(msg.sender) nonReentrant {
-        payable(msg.sender).transfer(partnerBalances[msg.sender]);
-        partnerBalances[msg.sender] = 0;
     }
 
     function tokenURI(uint256 _tokenId) public view virtual override returns(string memory) {
