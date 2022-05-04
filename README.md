@@ -5,6 +5,10 @@ and supports the following features:
 
 ## Features
 
+### Limits
+
+each wallet can only mint 3 tokens on whitelist and 3 additional on public.
+
 ### Pricing
 
 prices are fixed to 0.16 eth for public and 0.11 eth for whitelisted wallets.
