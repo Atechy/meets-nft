@@ -55,7 +55,7 @@ contract MeetsWorld is Ownable, ERC721, ReentrancyGuard, VerifySignature {
         address _marketingA,
         address _marketingB,
         address _verificationAdmin
-    ) public ERC721("Meetsmeta", "MM") {
+    ) ERC721("Meetsmeta", "MM") {
         builder = _builder;
         marketingA = _marketingA;
         marketingB = _marketingB;
