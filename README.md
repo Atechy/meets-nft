@@ -11,13 +11,7 @@ prices are fixed to 0.34 eth for public and 0.2eh for whitelisted wallets.
 
 ### Tiers
 
-5 tiers are defined on the system:
-
-BASIC 6000
-NORMAL 2000
-RARE 1500
-EPIC 400
-EXCLUSIVE 100
+5 tiers are defined on the system with max supply of 4888
 
 ### Partners Payout
 
@@ -41,13 +35,15 @@ The owner of the contract can invoke the whitelistAddress() function and add add
 
 whitelisted addresses will be able to mint up to 5 passes "still pending"
 
+beside the on chain whitelist users mainly going to be using off chain whitelist with signature verification.
+
 ### Dynamic token URI
 
 The NFTs image urls can be changed at later stage by using the setBaseURI method.
 
 ### Reveal Event
 
-The minters will be able to see what kind of pass they received, after the owner invoked the revealCollection() method.
+the reveal will be managed by assigning IPFS gateway to the image url.
 
 ### Royalties
 
