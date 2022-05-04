@@ -7,7 +7,9 @@ and supports the following features:
 
 ### Pricing
 
-prices are fixed to 0.34 eth for public and 0.2eh for whitelisted wallets.
+prices are fixed to 0.16 eth for public and 0.11 eth for whitelisted wallets.
+
+whitelist and public sales are two separate events.
 
 ### Tiers
 
