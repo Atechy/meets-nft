@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^ 0.8 .0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -10,7 +9,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./Verify.sol";
 
-contract MeetsWorld is Ownable,ERC721, ERC721Enumerable, ReentrancyGuard, VerifySignature, PaymentSplitter {
+contract MeetsWorld is Ownable, ERC721Enumerable, ReentrancyGuard, VerifySignature, PaymentSplitter {
 
     using Counters for Counters.Counter;
     using Strings for uint256;
@@ -161,30 +160,5 @@ contract MeetsWorld is Ownable,ERC721, ERC721Enumerable, ReentrancyGuard, Verify
         }
     }
 
-    /**
-     * override(ERC721, ERC721Enumerable, ERC721Pausable)
-     * here you're overriding _beforeTokenTransfer method of
-     * three Base classes namely ERC721, ERC721Enumerable, ERC721Pausable
-     * */
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal
-      override(ERC721, ERC721Enumerable) {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
-
-    /**
-     * override(ERC721, ERC721Enumerable) -> here you're specifying only two base classes ERC721, ERC721Enumerable
-     * */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721Enumerable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
-    }
 
 }
